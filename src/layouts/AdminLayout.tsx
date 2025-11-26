@@ -33,7 +33,7 @@ export function AdminLayout() {
     )
   }
 
-  const enabledPlugins = pluginsData?.data.filter((p) => p.enabled && p.menuItems) || []
+  const enabledPlugins = pluginsData?.data.filter((p: any) => p.enabled && p.menuItems) || []
 
   return (
     <DashboardShell plugins={enabledPlugins}>

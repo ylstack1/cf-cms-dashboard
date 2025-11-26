@@ -1,7 +1,4 @@
-'use client'
-
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Link, useRouterState } from '@tanstack/react-router'
 import {
   LayoutDashboard,
   FileText,
@@ -27,7 +24,8 @@ interface AdminSidebarProps {
 }
 
 export function AdminSidebarContent({ collapsed = false, className, plugins }: { collapsed?: boolean; className?: string; plugins?: Plugin[] }) {
-  const pathname = usePathname()
+  const router = useRouterState()
+  const pathname = router.location.pathname
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
 
@@ -84,7 +82,7 @@ export function AdminSidebarContent({ collapsed = false, className, plugins }: {
             {mainMenuItems.map((item) => (
               <Link
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative',
                   isActive(item.href)
@@ -132,7 +130,7 @@ export function AdminSidebarContent({ collapsed = false, className, plugins }: {
                 plugin.menuItems?.map((menuItem) => (
                   <Link
                     key={`${plugin.id}-${menuItem.href}`}
-                    href={menuItem.href}
+                    to={menuItem.href}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group',
                       isActive(menuItem.href)
@@ -176,7 +174,7 @@ export function AdminSidebarContent({ collapsed = false, className, plugins }: {
             {settingsItems.map((item) => (
               <Link
                 key={item.label}
-                href={item.href}
+                to={item.href}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group',
                   isActive(item.href)

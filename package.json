@@ -10,8 +10,8 @@
     "lint": "eslint src --ext ts,tsx"
   },
   "dependencies": {
-    "@fontsource-variable/geist-mono": "^1.1.0",
-    "@fontsource-variable/geist-sans": "^1.1.0",
+    "@fontsource/geist-mono": "^5.0.3",
+    "@fontsource/geist-sans": "^5.0.3",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -44,6 +44,7 @@
     "@tanstack/react-router": "^1.96.0",
     "@tanstack/router-devtools": "^1.96.0",
     "@vercel/analytics": "latest",
+    "react-router-dom": "^7.1.3",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -52,6 +53,7 @@
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
+    "next-themes": "^0.3.0",
     "react": "19.2.0",
     "react-day-picker": "9.8.0",
     "react-dom": "19.2.0",
