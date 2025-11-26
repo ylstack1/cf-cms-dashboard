@@ -11,14 +11,16 @@ import { RootLayout } from './layouts/RootLayout'
 import { AdminLayout } from './layouts/AdminLayout'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/admin/DashboardPage'
-
-// Placeholder component for pages under construction
-const UnderConstruction = () => (
-  <div className="text-white p-8">
-    <h1 className="text-2xl font-bold mb-4">Page Under Construction</h1>
-    <p className="text-gray-400">This page is being migrated. Please check back soon.</p>
-  </div>
-)
+import ContentPage from './pages/admin/content/ContentPage'
+import CreateContentPage from './pages/admin/content/CreateContentPage'
+import EditContentPage from './pages/admin/content/EditContentPage'
+import CollectionsPage from './pages/admin/collections/CollectionsPage'
+import CollectionDetailPage from './pages/admin/collections/CollectionDetailPage'
+import MediaPage from './pages/admin/media/MediaPage'
+import UsersPage from './pages/admin/users/UsersPage'
+import PluginsPage from './pages/admin/plugins/PluginsPage'
+import PluginSettingsPage from './pages/admin/plugins/PluginSettingsPage'
+import SettingsPage from './pages/admin/settings/SettingsPage'
 
 const rootRoute = createRootRoute({ component: RootLayout })
 
@@ -53,37 +55,61 @@ const adminDashboardRoute = createRoute({
 const adminContentRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: '/content',
-  component: UnderConstruction,
+  component: ContentPage,
+})
+
+const adminContentCreateRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/content/create',
+  component: CreateContentPage,
+})
+
+const adminContentEditRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/content/$contentId/edit',
+  component: EditContentPage,
 })
 
 const adminCollectionsRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: '/collections',
-  component: UnderConstruction,
+  component: CollectionsPage,
+})
+
+const adminCollectionDetailRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/collections/$collectionId',
+  component: CollectionDetailPage,
 })
 
 const adminMediaRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: '/media',
-  component: UnderConstruction,
+  component: MediaPage,
 })
 
 const adminUsersRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: '/users',
-  component: UnderConstruction,
+  component: UsersPage,
 })
 
 const adminPluginsRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: '/plugins',
-  component: UnderConstruction,
+  component: PluginsPage,
+})
+
+const adminPluginSettingsRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  path: '/plugins/$pluginId/settings',
+  component: PluginSettingsPage,
 })
 
 const adminSettingsRoute = createRoute({
   getParentRoute: () => adminRoute,
   path: '/settings',
-  component: UnderConstruction,
+  component: SettingsPage,
 })
 
 const routeTree = rootRoute.addChildren([
@@ -92,10 +118,14 @@ const routeTree = rootRoute.addChildren([
   adminRoute.addChildren([
     adminDashboardRoute,
     adminContentRoute,
+    adminContentCreateRoute,
+    adminContentEditRoute,
     adminCollectionsRoute,
+    adminCollectionDetailRoute,
     adminMediaRoute,
     adminUsersRoute,
     adminPluginsRoute,
+    adminPluginSettingsRoute,
     adminSettingsRoute,
   ]),
 ])
