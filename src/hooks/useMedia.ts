@@ -1,6 +1,4 @@
-'use client'
-
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient, buildQueryString, fetcher } from '@/lib/api'
 import type { Media, PaginatedResponse } from '@/types'
 
@@ -19,14 +17,20 @@ export function useMedia(options: UseMediaOptions = {}) {
     mimeType: options.mimeType,
   })
 
-  return useSWR<PaginatedResponse<Media>>(`/admin/media${queryString}`, fetcher, {
-    refreshInterval: 0,
-    revalidateOnFocus: false,
+  return useQuery({
+    queryKey: ['media', queryString],
+    queryFn: () => fetcher<PaginatedResponse<Media>>(`/admin/media${queryString}`),
+    refetchInterval: 0,
+    refetchOnWindowFocus: false,
   })
 }
 
 export function useMediaItem(id: string | null) {
-  return useSWR<Media>(id ? `/admin/media/${id}` : null, fetcher)
+  return useQuery({
+    queryKey: ['media', id],
+    queryFn: () => fetcher<Media>(`/admin/media/${id}`),
+    enabled: !!id,
+  })
 }
 
 export async function uploadMedia(file: File, data?: { altText?: string; title?: string }) {

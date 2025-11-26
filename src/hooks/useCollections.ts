@@ -1,6 +1,4 @@
-'use client'
-
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient, buildQueryString, fetcher } from '@/lib/api'
 import type { Collection, PaginatedResponse } from '@/types'
 
@@ -17,11 +15,18 @@ export function useCollections(options: UseCollectionsOptions = {}) {
     search: options.search,
   })
 
-  return useSWR<PaginatedResponse<Collection>>(`/admin/collections${queryString}`, fetcher)
+  return useQuery({
+    queryKey: ['collections', queryString],
+    queryFn: () => fetcher<PaginatedResponse<Collection>>(`/admin/collections${queryString}`),
+  })
 }
 
 export function useCollection(id: string | null) {
-  return useSWR<Collection>(id ? `/admin/collections/${id}` : null, fetcher)
+  return useQuery({
+    queryKey: ['collections', id],
+    queryFn: () => fetcher<Collection>(`/admin/collections/${id}`),
+    enabled: !!id,
+  })
 }
 
 export async function createCollection(payload: Pick<Collection, 'name' | 'slug' | 'description'>) {
@@ -30,4 +35,8 @@ export async function createCollection(payload: Pick<Collection, 'name' | 'slug'
 
 export async function updateCollection(id: string, payload: Partial<Collection>) {
   return apiClient.put<Collection>(`/admin/collections/${id}`, payload)
+}
+
+export async function deleteCollection(id: string) {
+  return apiClient.delete(`/admin/collections/${id}`)
 }

@@ -1,6 +1,4 @@
-'use client'
-
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient, buildQueryString, fetcher } from '@/lib/api'
 import type { Plugin, PaginatedResponse } from '@/types'
 
@@ -19,17 +17,27 @@ export function usePlugins(options: UsePluginsOptions = {}, fetchEnabled = true)
     search: options.search,
   })
 
-  const key = fetchEnabled ? `/admin/plugins${queryString}` : null
-
-  return useSWR<PaginatedResponse<Plugin>>(key, fetcher)
+  return useQuery({
+    queryKey: ['plugins', queryString],
+    queryFn: () => fetcher<PaginatedResponse<Plugin>>(`/admin/plugins${queryString}`),
+    enabled: fetchEnabled,
+  })
 }
 
 export function usePlugin(id: string | null) {
-  return useSWR<Plugin>(id ? `/admin/plugins/${id}` : null, fetcher)
+  return useQuery({
+    queryKey: ['plugins', id],
+    queryFn: () => fetcher<Plugin>(`/admin/plugins/${id}`),
+    enabled: !!id,
+  })
 }
 
 export function usePluginSettings(id: string | null) {
-  return useSWR<Record<string, unknown>>(id ? `/admin/plugins/${id}/settings` : null, fetcher)
+  return useQuery({
+    queryKey: ['plugins', id, 'settings'],
+    queryFn: () => fetcher<Record<string, unknown>>(`/admin/plugins/${id}/settings`),
+    enabled: !!id,
+  })
 }
 
 export async function togglePlugin(id: string, enabled: boolean) {

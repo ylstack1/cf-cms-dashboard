@@ -1,10 +1,10 @@
-'use client'
-
 import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/authStore'
 import type { ApiError, AuthResponse } from '@/types'
+import { getMockApi } from './mockApi'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'
+const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true'
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -57,28 +57,46 @@ export const buildQueryString = (params?: Record<string, string | number | boole
 }
 
 export async function fetcher<T>(url: string): Promise<T> {
+  if (USE_MOCK_API) {
+    return getMockApi().get<T>(url)
+  }
   const response = await api.get<T>(url)
   return response.data
 }
 
 export const apiClient = {
   get: async <T>(url: string, config?: AxiosRequestConfig) => {
+    if (USE_MOCK_API) {
+      return getMockApi().get<T>(url)
+    }
     const response = await api.get<T>(url, config)
     return response.data
   },
   post: async <T>(url: string, data?: unknown, config?: AxiosRequestConfig) => {
+    if (USE_MOCK_API) {
+      return getMockApi().post<T>(url, data)
+    }
     const response = await api.post<T>(url, data, config)
     return response.data
   },
   put: async <T>(url: string, data?: unknown, config?: AxiosRequestConfig) => {
+    if (USE_MOCK_API) {
+      return getMockApi().put<T>(url, data)
+    }
     const response = await api.put<T>(url, data, config)
     return response.data
   },
   patch: async <T>(url: string, data?: unknown, config?: AxiosRequestConfig) => {
+    if (USE_MOCK_API) {
+      return getMockApi().patch<T>(url, data)
+    }
     const response = await api.patch<T>(url, data, config)
     return response.data
   },
   delete: async <T>(url: string, config?: AxiosRequestConfig) => {
+    if (USE_MOCK_API) {
+      return getMockApi().delete<T>(url)
+    }
     const response = await api.delete<T>(url, config)
     return response.data
   },

@@ -1,6 +1,4 @@
-'use client'
-
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient, buildQueryString, fetcher } from '@/lib/api'
 import type { User, PaginatedResponse } from '@/types'
 
@@ -19,11 +17,18 @@ export function useUsers(options: UseUsersOptions = {}) {
     search: options.search,
   })
 
-  return useSWR<PaginatedResponse<User>>(`/admin/users${queryString}`, fetcher)
+  return useQuery({
+    queryKey: ['users', queryString],
+    queryFn: () => fetcher<PaginatedResponse<User>>(`/admin/users${queryString}`),
+  })
 }
 
 export function useUser(id: string | null) {
-  return useSWR<User>(id ? `/admin/users/${id}` : null, fetcher)
+  return useQuery({
+    queryKey: ['users', id],
+    queryFn: () => fetcher<User>(`/admin/users/${id}`),
+    enabled: !!id,
+  })
 }
 
 export async function createUser(payload: { email: string; name: string; role: User['role']; password: string }) {

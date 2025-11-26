@@ -1,6 +1,4 @@
-'use client'
-
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient, buildQueryString, fetcher } from '@/lib/api'
 import type { Content, ContentPayload, PaginatedResponse } from '@/types'
 
@@ -21,11 +19,18 @@ export function useContent(options: UseContentOptions = {}) {
     search: options.search,
   })
 
-  return useSWR<PaginatedResponse<Content>>(`/admin/content${queryString}`, fetcher)
+  return useQuery({
+    queryKey: ['content', queryString],
+    queryFn: () => fetcher<PaginatedResponse<Content>>(`/admin/content${queryString}`),
+  })
 }
 
 export function useContentItem(id: string | null) {
-  return useSWR<Content>(id ? `/admin/content/${id}` : null, fetcher)
+  return useQuery({
+    queryKey: ['content', id],
+    queryFn: () => fetcher<Content>(`/admin/content/${id}`),
+    enabled: !!id,
+  })
 }
 
 export async function createContent(payload: ContentPayload) {
