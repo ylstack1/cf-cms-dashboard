@@ -1,10 +1,17 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { Sidebar } from "@/components/sidebar"
-import { cn } from "@/lib/utils"
+import * as React from 'react'
+import { AdminSidebar } from '@/components/admin/admin-sidebar'
+import { AdminHeader } from '@/components/admin/admin-header'
+import { cn } from '@/lib/utils'
+import type { Plugin } from '@/types'
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+interface DashboardShellProps {
+  children: React.ReactNode
+  plugins?: Plugin[]
+}
+
+export function DashboardShell({ children, plugins }: DashboardShellProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false)
 
   React.useEffect(() => {
@@ -25,15 +32,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative min-h-screen bg-[#0b0c15] flex">
-      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      <AdminSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} plugins={plugins} />
       <main
         className={cn(
-          "flex-1 min-w-0 transition-all duration-300 ease-in-out p-4 md:p-6 lg:p-8",
-          "ml-[70px]",
-          !isCollapsed && "lg:ml-64",
+          'flex-1 min-w-0 transition-all duration-300 ease-in-out p-4 md:p-6 lg:p-8',
+          'lg:ml-[70px]',
+          !isCollapsed && 'lg:ml-64',
         )}
       >
-        <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500">{children}</div>
+        <div className="max-w-[1600px] mx-auto space-y-8 animate-in fade-in duration-500">
+          <AdminHeader plugins={plugins} />
+          {children}
+        </div>
       </main>
     </div>
   )
