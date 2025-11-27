@@ -45,7 +45,7 @@ export default function ContentPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-white">Content</h1>
           <p className="text-gray-400 mt-2">Manage your content items</p>
         </div>
-        <Link to="/admin/content/create">
+        <Link to="/admin/content/create" className="inline-flex">
           <Button className="bg-indigo-500 hover:bg-indigo-600">
             <Plus className="w-4 h-4 mr-2" />
             New Content
@@ -121,7 +121,7 @@ export default function ContentPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-2">
-                          <Link to={`/admin/content/${content.id}/edit`}>
+                          <Link to="/admin/content/$contentId/edit" params={{ contentId: content.id }}>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                               <Edit className="w-4 h-4" />
                             </Button>
@@ -165,7 +165,7 @@ export default function ContentPage() {
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-400 mb-4">No content found</p>
-              <Link to="/admin/content/create">
+              <Link to="/admin/content/create" className="inline-flex">
                 <Button className="bg-indigo-500 hover:bg-indigo-600">
                   <Plus className="w-4 h-4 mr-2" />
                   Create your first content
