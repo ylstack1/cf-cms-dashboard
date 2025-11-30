@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Plus, Search, Edit, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -9,12 +9,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useContent, deleteContent } from '@/hooks/useContent'
+import { usePageActions } from '@/hooks/usePageActions'
 import { formatDistance } from 'date-fns'
 
 export default function ContentPage() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const { data, isLoading, error, mutate } = useContent({ page, limit: 10, search })
+  const { setActions } = usePageActions()
+
+  // Set page actions
+  useEffect(() => {
+    setActions(
+      <Link href="/admin/content/create">
+        <Button className="bg-indigo-500 hover:bg-indigo-600">
+          <Plus className="w-4 h-4 mr-2" />
+          New Content
+        </Button>
+      </Link>
+    )
+
+    return () => setActions(null)
+  }, [setActions])
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this content?')) return
@@ -42,18 +58,7 @@ export default function ContentPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">Content</h1>
-          <p className="text-gray-400 mt-2">Manage your content items</p>
-        </div>
-        <Link href="/admin/content/create">
-          <Button className="bg-indigo-500 hover:bg-indigo-600">
-            <Plus className="w-4 h-4 mr-2" />
-            New Content
-          </Button>
-        </Link>
-      </div>
+      <p className="text-gray-400">Manage your content items</p>
 
       <Card>
         <CardHeader>
