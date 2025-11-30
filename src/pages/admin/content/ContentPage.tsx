@@ -1,7 +1,5 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { Plus, Search, Edit, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,37 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useContent, deleteContent } from '@/hooks/useContent'
-import { usePageActions } from '@/hooks/usePageActions'
 import { formatDistance } from 'date-fns'
 
 export default function ContentPage() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
-  const { data, isLoading, error, mutate } = useContent({ page, limit: 10, search })
-  const { setActions } = usePageActions()
-
-  // Set page actions
-  useEffect(() => {
-    setActions(
-      <Link href="/admin/content/create">
-        <Button className="bg-indigo-500 hover:bg-indigo-600">
-          <Plus className="w-4 h-4 mr-2" />
-          New Content
-        </Button>
-      </Link>
-    )
-
-    return () => setActions(null)
-  }, [setActions])
+  const { data, isLoading, error, refetch } = useContent({ page, limit: 10, search })
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this content?')) return
 
     try {
       await deleteContent(id)
-      mutate()
-    } catch (error) {
-      console.error('Failed to delete content:', error)
+      refetch()
+    } catch (err) {
+      console.error('Failed to delete content:', err)
     }
   }
 
@@ -58,7 +40,18 @@ export default function ContentPage() {
 
   return (
     <div className="space-y-6">
-      <p className="text-gray-400">Manage your content items</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-white">Content</h1>
+          <p className="text-gray-400 mt-2">Manage your content items</p>
+        </div>
+        <Link to="/admin/content/create" className="inline-flex">
+          <Button className="bg-indigo-500 hover:bg-indigo-600">
+            <Plus className="w-4 h-4 mr-2" />
+            New Content
+          </Button>
+        </Link>
+      </div>
 
       <Card>
         <CardHeader>
@@ -128,7 +121,7 @@ export default function ContentPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-2">
-                          <Link href={`/admin/content/${content.id}/edit`}>
+                          <Link to="/admin/content/$contentId/edit" params={{ contentId: content.id }}>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                               <Edit className="w-4 h-4" />
                             </Button>
@@ -151,16 +144,10 @@ export default function ContentPage() {
               {data.meta.totalPages > 1 && (
                 <div className="flex items-center justify-between pt-4">
                   <p className="text-sm text-gray-400">
-                    Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, data.meta.total)} of {data.meta.total}{' '}
-                    results
+                    Showing {(page - 1) * 10 + 1} to {Math.min(page * 10, data.meta.total)} of {data.meta.total} results
                   </p>
                   <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage(page - 1)}
-                      disabled={page === 1}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => setPage(page - 1)} disabled={page === 1}>
                       Previous
                     </Button>
                     <Button
@@ -178,7 +165,7 @@ export default function ContentPage() {
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-400 mb-4">No content found</p>
-              <Link href="/admin/content/create">
+              <Link to="/admin/content/create" className="inline-flex">
                 <Button className="bg-indigo-500 hover:bg-indigo-600">
                   <Plus className="w-4 h-4 mr-2" />
                   Create your first content
