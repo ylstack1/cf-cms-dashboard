@@ -23,7 +23,7 @@ interface AdminSidebarProps {
   plugins?: Plugin[]
 }
 
-export function AdminSidebarContent({ collapsed = false, className, plugins, isMobile = false }: { collapsed?: boolean; className?: string; plugins?: Plugin[]; isMobile?: boolean }) {
+export function AdminSidebarContent({ collapsed = false, className, plugins }: { collapsed?: boolean; className?: string; plugins?: Plugin[] }) {
   const router = useRouterState()
   const pathname = router.location.pathname
   const user = useAuthStore((state) => state.user)
